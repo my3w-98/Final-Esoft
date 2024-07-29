@@ -3,7 +3,7 @@ import { View, Text, TextInput, ScrollView, TouchableOpacity, Platform, Alert, F
 import { SafeAreaView } from 'react-native-safe-area-context';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import CustomButton from '../../components/CustomButton';
-import { db } from '../../config/firebase'; // Correctly import the Firebase configuration file
+import { getFirestore } from 'firebase/firestore'; // Correctly import the Firebase configuration file
 import { collection, addDoc, Timestamp, getDocs, deleteDoc, doc } from 'firebase/firestore'; // Import Firestore functions
 
 const Medication = () => {
@@ -13,6 +13,7 @@ const Medication = () => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [medications, setMedications] = useState([]);
+  const db = getFirestore();
 
   useEffect(() => {
     const fetchMedications = async () => {
@@ -115,68 +116,67 @@ const Medication = () => {
 
   return (
     <SafeAreaView className="bg-primarytabs flex-1">
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }} className="px-4 py-6">
-        <View className="bg-customColors-color1 rounded-lg p-6 mb-6">
-          <Text className="text-2xl text-white font-psemibold">Add Medication</Text>
-          <View className="mt-6">
-            <Text className="text-lg text-white font-pregular">Medication Name</Text>
-            <TextInput
-              className="border border-gray-100 rounded-md p-3 mt-2 text-white bg-black-200"
-              placeholder="Enter medication name"
-              placeholderTextColor="#CDCDE0"
-              value={medication}
-              onChangeText={setMedication}
+      <FlatList
+        data={medications}
+        renderItem={renderMedication}
+        keyExtractor={(item) => item.id}
+        ListHeaderComponent={(
+          <View className="bg-customColors-color1 rounded-lg p-6 mb-6">
+            <Text className="text-2xl text-white font-psemibold">Add Medication</Text>
+            <View className="mt-6">
+              <Text className="text-lg text-white font-pregular">Medication Name</Text>
+              <TextInput
+                className="border border-gray-100 rounded-md p-3 mt-2 text-white bg-black-200"
+                placeholder="Enter medication name"
+                placeholderTextColor="#CDCDE0"
+                value={medication}
+                onChangeText={setMedication}
+              />
+            </View>
+            <View className="mt-6">
+              <Text className="text-lg text-white font-pregular">Dose</Text>
+              <TextInput
+                className="border border-gray-100 rounded-md p-3 mt-2 text-white bg-black-200"
+                placeholder="Enter dose"
+                placeholderTextColor="#CDCDE0"
+                value={dose}
+                onChangeText={setDose}
+              />
+            </View>
+            <View className="mt-6">
+              <Text className="text-lg text-white font-pregular">Reminder</Text>
+              <TouchableOpacity onPress={showDatepicker} className="border border-gray-100 rounded-md p-3 mt-2 bg-black-200">
+                <Text className="text-white">{`Date: ${reminder.toLocaleDateString()}`}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={showTimepicker} className="border border-gray-100 rounded-md p-3 mt-2 bg-black-200">
+                <Text className="text-white">{`Time: ${reminder.toLocaleTimeString()}`}</Text>
+              </TouchableOpacity>
+            </View>
+            {showDatePicker && (
+              <DateTimePicker
+                value={reminder}
+                mode="date"
+                display="default"
+                onChange={onChangeDate}
+              />
+            )}
+            {showTimePicker && (
+              <DateTimePicker
+                value={reminder}
+                mode="time"
+                display="default"
+                onChange={onChangeTime}
+              />
+            )}
+            <CustomButton
+              title="Save"
+              handlePress={handleSave}
+              containerStyles="mt-6 bg-success"
             />
           </View>
-          <View className="mt-6">
-            <Text className="text-lg text-white font-pregular">Dose</Text>
-            <TextInput
-              className="border border-gray-100 rounded-md p-3 mt-2 text-white bg-black-200"
-              placeholder="Enter dose"
-              placeholderTextColor="#CDCDE0"
-              value={dose}
-              onChangeText={setDose}
-            />
-          </View>
-          <View className="mt-6">
-            <Text className="text-lg text-white font-pregular">Reminder</Text>
-            <TouchableOpacity onPress={showDatepicker} className="border border-gray-100 rounded-md p-3 mt-2 bg-black-200">
-              <Text className="text-white">{`Date: ${reminder.toLocaleDateString()}`}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={showTimepicker} className="border border-gray-100 rounded-md p-3 mt-2 bg-black-200">
-              <Text className="text-white">{`Time: ${reminder.toLocaleTimeString()}`}</Text>
-            </TouchableOpacity>
-          </View>
-          {showDatePicker && (
-            <DateTimePicker
-              value={reminder}
-              mode="date"
-              display="default"
-              onChange={onChangeDate}
-            />
-          )}
-          {showTimePicker && (
-            <DateTimePicker
-              value={reminder}
-              mode="time"
-              display="default"
-              onChange={onChangeTime}
-            />
-          )}
-          <CustomButton
-            title="Save"
-            handlePress={handleSave}
-            containerStyles="mt-6 bg-success"
-          />
-        </View>
-
-        <FlatList
-          data={medications}
-          renderItem={renderMedication}
-          keyExtractor={(item) => item.id}
-          contentContainerStyle={{ paddingBottom: 20 }}
-        />
-      </ScrollView>
+        )}
+        contentContainerStyle={{ paddingBottom: 20, paddingHorizontal: 16, paddingVertical: 24 }}
+      />
     </SafeAreaView>
   );
 };

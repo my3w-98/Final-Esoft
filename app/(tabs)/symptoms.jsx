@@ -1,12 +1,12 @@
 // Symptoms.js
 import React, { useState } from 'react';
-import { View, Text, ScrollView, TouchableWithoutFeedback, Keyboard, Button } from 'react-native';
+import { View, Text, ScrollView, TouchableWithoutFeedback, Keyboard, Button,FlatList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import SymptomsEntry from '../services/symptomsEntry';
 import BloodTestEntry from '../services/bloodTestEntry';
 import CustomButton from '../../components/CustomButton';
-import { db } from '../../config/firebase'; // Adjust the import according to your file structure
+import { getFirestore } from 'firebase/firestore'; // Adjust the import according to your file structure
 import { collection, addDoc } from 'firebase/firestore';
 
 const Symptoms = () => {
@@ -16,6 +16,7 @@ const Symptoms = () => {
   const [bloodTestDone, setBloodTestDone] = useState(false);
   const [testName, setTestName] = useState('');
   const [markers, setMarkers] = useState([]);
+  const db = getFirestore();
 
   const handleSave = async () => {
     try {
@@ -37,49 +38,60 @@ const Symptoms = () => {
     }
   };
 
+
+  const renderHeader = () => (
+    <>
+      <View className="bg-customColors-color1 rounded-lg p-6 mb-6">
+        <Text className="text-2xl text-white font-psemibold">Record Symptoms</Text>
+        <View className="mt-6">
+          <Text className="text-lg text-white font-pregular">Select Date</Text>
+          <Button onPress={() => setShowDatePicker(true)} title="Show date picker" />
+          {showDatePicker && (
+            <DateTimePicker
+              value={date}
+              mode="date"
+              display="default"
+              onChange={(event, selectedDate) => {
+                setShowDatePicker(false);
+                if (selectedDate) {
+                  setDate(selectedDate);
+                }
+              }}
+            />
+          )}
+        </View>
+      </View>
+
+      <View className="bg-customColors-color1 rounded-lg p-6 mb-6">
+        <Text className="text-xl text-white font-psemibold">Symptoms</Text>
+        <SymptomsEntry symptoms={symptoms} setSymptoms={setSymptoms} />
+      </View>
+    </>
+  );
+
+  const renderFooter = () => (
+    <View className="bg-customColors-color1 rounded-lg p-6">
+      <CustomButton
+        title="Save"
+        handlePress={handleSave}
+        containerStyles="mt-6"
+      />
+    </View>
+  );
+
   return (
     <SafeAreaView className="bg-primarytabs flex-1">
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <ScrollView contentContainerStyle={{ flexGrow: 1 }} className="px-4 py-6">
-          <View className="bg-customColors-color1 rounded-lg p-6 mb-6">
-            <Text className="text-2xl text-white font-psemibold">Record Symptoms</Text>
-            <View className="mt-6">
-              <Text className="text-lg text-white font-pregular">Select Date</Text>
-              <Button onPress={() => setShowDatePicker(true)} title="Show date picker" />
-              {showDatePicker && (
-                <DateTimePicker
-                  value={date}
-                  mode="date"
-                  display="default"
-                  onChange={(event, selectedDate) => {
-                    setShowDatePicker(false);
-                    if (selectedDate) {
-                      setDate(selectedDate);
-                    }
-                  }}
-                />
-              )}
-            </View>
-          </View>
-
-          <View className="bg-customColors-color1 rounded-lg p-6 mb-6">
-            <Text className="text-xl text-white font-psemibold">Symptoms</Text>
-            <SymptomsEntry symptoms={symptoms} setSymptoms={setSymptoms} />
-          </View>
-
-          
-
-          <View className="bg-customColors-color1 rounded-lg p-6">
-            <CustomButton
-              title="Save"
-              handlePress={handleSave}
-              containerStyles="mt-6"
-            />
-          </View>
-        </ScrollView>
+        <FlatList
+          data={[]} // No data as the content is not a list
+          ListHeaderComponent={renderHeader}
+          ListFooterComponent={renderFooter}
+          contentContainerStyle={{ paddingHorizontal: 16, paddingVertical: 24 }}
+        />
       </TouchableWithoutFeedback>
     </SafeAreaView>
   );
 };
+
 
 export default Symptoms;

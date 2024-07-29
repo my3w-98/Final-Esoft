@@ -1,27 +1,17 @@
 import { View, Text, Image } from 'react-native';
 import React from 'react';
 import { Tabs } from 'expo-router';
-import { icons } from '../../constants';
+import { FontAwesome5,FontAwesome6,Fontisto,Entypo } from '@expo/vector-icons';
 
-const TabIcon = ({ icon, color, name, focused }) => {
-  return (
-    <View className="items-center justify-center gap-2">
-      <Image source={icon} resizeMode="contain" style={{ tintColor: color }} className="w-6 h-6" />
-      <Text
-        className={`${focused ? 'font-psemibold' : 'font-pregular'} text-xs`}
-        style={{ color: color }}
-      >
-        {name}
-      </Text>
-    </View>
-  );
-};
+import { color } from 'react-native-elements/dist/helpers';
+
 
 const TabsLayout = () => {
   return (
-    <Tabs
+    <Tabs 
       screenOptions={{
-        tabBarShowLabel: false,
+        headerShown:false,
+        tabBarShowLabel: true,
         tabBarActiveTintColor: '#A7C7E7',
         tabBarInactiveTintColor: '#CDCDE0',
         tabBarStyle: {
@@ -33,61 +23,45 @@ const TabsLayout = () => {
       <Tabs.Screen
         name="home"
         options={{
-          title: 'Home',
-          headerShown: false,
-          tabBarIcon: ({ color, focused }) => (
-            <TabIcon icon={icons.home} color={color} name="Home" focused={focused} />
-          ),
+          tabBarLabel:'Home',
+          tabBarIcon:({color})=><FontAwesome5 name="home" 
+          size={24} color={color}/>
         }}
       />
       <Tabs.Screen
         name="medication"
         options={{
-          title: 'Medication',
-          headerShown: false,
-          tabBarIcon: ({ color, focused }) => (
-            <TabIcon icon={icons.medication} color={color} name="Medication" focused={focused} />
-          ),
+          tabBarLabel:'Medication',
+          tabBarIcon:({color})=><FontAwesome6 name="briefcase-medical" 
+          size={24} color={color}/>
         }}
       />
       <Tabs.Screen
         name="symptoms"
-        options={{
-          title: 'Symptoms',
-          headerShown: false,
-          tabBarIcon: ({ color, focused }) => (
-            <TabIcon icon={icons.symptoms} color={color} name="Symptoms" focused={focused} />
-          ),
+        options={{  tabBarLabel:'Symptoms',
+        tabBarIcon:({color})=><FontAwesome6 name="head-side-cough" 
+        size={24} color={color} />
         }}
       />
       <Tabs.Screen
         name="bloodTests"
-        options={{
-          title: 'Blood Tests',
-          headerShown: false,
-          tabBarIcon: ({ color, focused }) => (
-            <TabIcon icon={icons.bloodtests} color={color} name="Blood Tests" focused={focused} />
-          ),
+        options={{  tabBarLabel:'Blood Tests',
+        tabBarIcon:({color})=><Fontisto name="blood-test" 
+        size={24} color={color} />
         }}
       />
       <Tabs.Screen
         name="reminders"
-        options={{
-          title: 'Reminders',
-          headerShown: false,
-          tabBarIcon: ({ color, focused }) => (
-            <TabIcon icon={icons.reminders} color={color} name="Reminders" focused={focused} />
-          ),
+        options={{  tabBarLabel:'Reminders',
+        tabBarIcon:({color})=><Entypo name="bell" 
+        size={24} color={color} />
         }}
       />
       <Tabs.Screen
         name="news"
-        options={{
-          title: 'News',
-          headerShown: false,
-          tabBarIcon: ({ color, focused }) => (
-            <TabIcon icon={icons.news} color={color} name="News" focused={focused} />
-          ),
+        options={{  tabBarLabel:'News',
+        tabBarIcon:({color})=><FontAwesome6 name="newspaper" 
+        size={24} color={color}/>
         }}
       />
     </Tabs>

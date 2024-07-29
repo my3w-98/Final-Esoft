@@ -15,7 +15,11 @@ const News = () => {
       <ScrollView contentContainerStyle={{ flexGrow: 1 }} className="px-4 py-6">
         <View className="bg-customColors-color1 rounded-lg p-6">
           <Text className="text-2xl text-white font-psemibold">News Updates</Text>
-          <FlatList
+         
+        </View>
+      </ScrollView>
+
+      <FlatList
             data={news}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item }) => (
@@ -24,8 +28,7 @@ const News = () => {
               </View>
             )}
           />
-        </View>
-      </ScrollView>
+          
     </SafeAreaView>
   );
 };
