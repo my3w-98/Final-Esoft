@@ -15,7 +15,7 @@ const BloodTests = ({ navigation }) => {
   const [testName, setTestName] = useState('');
   const [markers, setMarkers] = useState([]);
 
-  const db = getFirestore();
+const db = getFirestore();
 
   const handleSave = async () => {
     try {
@@ -38,31 +38,30 @@ const BloodTests = ({ navigation }) => {
   };
 
   const renderHeader = () => (
-    <View className="bg-customColors-color1 rounded-lg p-6 mb-6">
-      <Text className="text-2xl text-white font-psemibold">Record Blood Tests</Text>
-      <View className="mt-6">
-        <Text className="text-lg text-white font-pregular">Selected Date: {date.toLocaleDateString()}</Text>
-        <Button onPress={() => setShowDatePicker(true)} title="Change date" />
-        {showDatePicker && (
-          <DateTimePicker
-            value={date}
-            mode="date"
-            display="default"
-            onChange={(event, selectedDate) => {
-              setShowDatePicker(false);
-              if (selectedDate) {
-                setDate(selectedDate);
-              }
-            }}
-          />
-        )}
-      </View>
-    </View>
-  );
-
-  const renderFooter = () => (
-    <View>
+    <SafeAreaView>
+      <>
       <View className="bg-customColors-color1 rounded-lg p-6 mb-6">
+        <Text className="text-2xl text-white font-psemibold">Record Blood Tests</Text>
+        <View className="mt-6">
+          <Text className="text-lg text-white font-pregular">Selected Date: {date.toLocaleDateString()}</Text>
+          <Button onPress={() => setShowDatePicker(true)} title="Change date" />
+          {showDatePicker && (
+            <DateTimePicker
+              value={date}
+              mode="date"
+              display="default"
+              onChange={(event, selectedDate) => {
+                setShowDatePicker(false);
+                if (selectedDate) {
+                  setDate(selectedDate);
+                }
+              }}
+            />
+          )}
+        </View>
+      </View>
+
+      <View className="bg-customColors-color1  rounded-lg p-6 mb-6">
         <BloodTestEntry
           bloodTestDone={bloodTestDone}
           setBloodTestDone={setBloodTestDone}
@@ -72,8 +71,12 @@ const BloodTests = ({ navigation }) => {
           setMarkers={setMarkers}
         />
       </View>
+    </></SafeAreaView>
+  );
 
-      <View className="bg-customColors-color1 rounded-lg p-6 mb-6">
+  const renderFooter = () => (
+    <>
+      <View className="bg-customColors-color1  rounded-lg p-6 mb-6">
         <Button
           title="Save"
           onPress={handleSave}
@@ -81,17 +84,19 @@ const BloodTests = ({ navigation }) => {
           containerStyle={{ marginTop: 10 }}
         />
       </View>
-    </View>
+
+      
+    </>
   );
 
   return (
-    <SafeAreaView className="bg-primarytabs flex-1">
+    <SafeAreaView className="bg-primary flex-1">
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <FlatList
           data={[]}
           ListHeaderComponent={renderHeader}
           ListFooterComponent={renderFooter}
-          contentContainerStyle={{ paddingBottom: 20, paddingHorizontal: 16, paddingVertical: 24 }}
+          contentContainerStyle={{ paddingBottom: 20 }}
         />
       </TouchableWithoutFeedback>
     </SafeAreaView>

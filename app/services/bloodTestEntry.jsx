@@ -1,4 +1,3 @@
-// BloodTestEntry.js
 import React, { useState } from 'react';
 import { View, Text, TextInput, FlatList, Button } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
@@ -7,14 +6,16 @@ import CustomButton from '../../components/CustomButton';
 const defaultBloodTests = {
   ESR: ['ESR Value'],
   CRP: ['CRP Value'],
-  'FBC/CBC': ['HB', 'WBC', 'Plt','Neutrophils','Lymphocytes','RBC','HCT','MCV','MCH'],
+  'FBC/CBC': ['HB', 'WBC', 'Plt', 'Neutrophils', 'Lymphocytes', 'RBC', 'HCT', 'MCV', 'MCH'],
   ALT: ['ALT Value'],
-  Other: [],
+  
+  
 };
 
 const BloodTestEntry = ({ bloodTestDone, setBloodTestDone, testName, setTestName, markers, setMarkers }) => {
   const [markerName, setMarkerName] = useState('');
   const [markerValue, setMarkerValue] = useState('');
+  const [tempMarkers, setTempMarkers] = useState({});
 
   const handleAddMarker = () => {
     if (markerName.trim() && markerValue.trim()) {
@@ -24,13 +25,23 @@ const BloodTestEntry = ({ bloodTestDone, setBloodTestDone, testName, setTestName
     }
   };
 
+  const handleDefaultMarkerValueChange = (marker, value) => {
+    setTempMarkers({ ...tempMarkers, [marker]: value });
+  };
+
+  const saveDefaultMarkers = () => {
+    const newMarkers = Object.entries(tempMarkers).map(([name, value]) => ({ name, value }));
+    setMarkers([...markers, ...newMarkers]);
+    setTempMarkers({});
+  };
+
   return (
-    <View className="mt-6">
-      <Text className="text-lg text-white font-pregular">Blood Test Done?</Text>
-      <Button title={bloodTestDone ? "Yes" : "No"} onPress={() => setBloodTestDone(!bloodTestDone)} />
+    <View style={{ marginTop: 16 }}>
+      <Text style={{ fontSize: 18, color: '#FFFFFF', fontFamily: 'pregular' }}>Blood Test Done?</Text>
+      <Button title={bloodTestDone ? "No" : "Yes"} onPress={() => setBloodTestDone(!bloodTestDone)} />
       {bloodTestDone && (
-        <View className="mt-6">
-          <Text className="text-lg text-white font-pregular">Test Name</Text>
+        <View style={{ marginTop: 16 }}>
+          <Text style={{ fontSize: 18, color: '#FFFFFF', fontFamily: 'pregular' }}>Test Name</Text>
           <Picker
             selectedValue={testName}
             onValueChange={(itemValue) => setTestName(itemValue)}
@@ -40,23 +51,24 @@ const BloodTestEntry = ({ bloodTestDone, setBloodTestDone, testName, setTestName
               <Picker.Item key={index} label={test} value={test} />
             ))}
           </Picker>
-          <Text className="text-lg text-white font-pregular mt-6">Markers</Text>
+          <Text style={{ fontSize: 18, color: '#FFFFFF', fontFamily: 'pregular', marginTop: 16 }}>Markers</Text>
           {defaultBloodTests[testName] && defaultBloodTests[testName].map((defaultMarker, index) => (
-            <View key={index} className="flex-row justify-between">
-              <Text className="text-lg text-white font-pregular">{defaultMarker}</Text>
+            <View key={index} style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+              <Text style={{ fontSize: 18, color: '#FFFFFF', fontFamily: 'pregular' }}>{defaultMarker}</Text>
               <TextInput
-                className="border border-gray-100 rounded-md p-3 mt-2 text-white bg-black-200 w-20"
+                style={{ borderColor: '#FFFFFF', borderWidth: 1, borderRadius: 8, padding: 8, marginTop: 8, marginBottom:8, color: '#FFFFFF', backgroundColor: '#000000', width: '50%' }}
                 placeholder="Value"
                 placeholderTextColor="#CDCDE0"
-                onChangeText={(value) => setMarkers([...markers, { name: defaultMarker, value }])}
+                onChangeText={(value) => handleDefaultMarkerValueChange(defaultMarker, value)}
                 returnKeyType="done"
               />
             </View>
           ))}
+          <View style={{ marginTop: 30}} ><Button  title="Save Markers" onPress={saveDefaultMarkers} /></View>
           {testName === 'Other' && (
             <View>
               <TextInput
-                className="border border-gray-100 rounded-md p-3 mt-2 text-white bg-black-200"
+                style={{ borderColor: '#FFFFFF', borderWidth: 1, borderRadius: 8, padding: 8, marginTop: 8, color: '#FFFFFF', backgroundColor: '#000000' }}
                 placeholder="Enter marker"
                 placeholderTextColor="#CDCDE0"
                 value={markerName}
@@ -64,7 +76,7 @@ const BloodTestEntry = ({ bloodTestDone, setBloodTestDone, testName, setTestName
                 returnKeyType="done"
               />
               <TextInput
-                className="border border-gray-100 rounded-md p-3 mt-2 text-white bg-black-200"
+                style={{ borderColor: '#FFFFFF', borderWidth: 1, borderRadius: 8, padding: 8, marginTop: 8,marginBottom: 8, color: '#FFFFFF', backgroundColor: '#000000' }}
                 placeholder="Enter marker value"
                 placeholderTextColor="#CDCDE0"
                 value={markerValue}
@@ -74,7 +86,7 @@ const BloodTestEntry = ({ bloodTestDone, setBloodTestDone, testName, setTestName
               <CustomButton
                 title="Add Marker"
                 handlePress={handleAddMarker}
-                containerStyles="mt-6"
+                containerStyles={{ marginTop: 16 }}
               />
             </View>
           )}
@@ -83,8 +95,8 @@ const BloodTestEntry = ({ bloodTestDone, setBloodTestDone, testName, setTestName
               data={markers}
               keyExtractor={(item, index) => index.toString()}
               renderItem={({ item }) => (
-                <View className="p-4 border-b border-gray-100 mt-6">
-                  <Text className="text-lg text-white font-pregular">{item.name}: {item.value}</Text>
+                <View style={{ padding: 16, borderBottomColor: '#FFFFFF', borderBottomWidth: 1, marginTop: 16 }}>
+                  <Text style={{ fontSize: 18, color: '#FFFFFF', fontFamily: 'pregular' }}>{item.name}: {item.value}</Text>
                 </View>
               )}
             />
