@@ -4,16 +4,18 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { getAuth } from 'firebase/auth'; // Adjust the path as necessary
 import { useNavigation } from '@react-navigation/native';
 import { Icon } from 'react-native-elements'; // Assuming you're using react-native-elements
+import { auth } from '../../config/firebase';
+
 
 const Home = () => {
   const navigation = useNavigation();
 
-  const auth = getAuth();
+  
   const handleLogout = () => {
     auth.signOut()
       .then(() => {
         // Sign-out successful.
-        navigation.navigate('sign-in'); // Navigate to the login screen after logout
+        navigation.navigate('index'); // Navigate to the login screen after logout
       })
       .catch((error) => {
         // An error happened.

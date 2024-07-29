@@ -8,6 +8,7 @@ import FormField from '../../components/FormField';
 import { Link, useRouter } from 'expo-router';
 import { getAuth } from 'firebase/auth'; 
 import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../../config/firebase';
 
 const SignUp = () => {
   const [form, setForm] = useState({
@@ -15,7 +16,7 @@ const SignUp = () => {
     password: '',
   });
 
-  const auth = getAuth();
+ 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
 

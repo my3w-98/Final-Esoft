@@ -1,13 +1,23 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { Image, ScrollView, Text, View } from 'react-native';
-import { router } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { images } from '../constants';
 import CustomButton from '../components/CustomButton';
 import { auth } from '../config/firebase'; // Correctly import auth
 
 export default function App() {
+  const router = useRouter();
+
+  const handlePress = () => {
+    const user = auth.currentUser;
+    if (user) {
+      router.push('/home');
+    } else {
+      router.push('/sign-in');
+    }
+  };
 
   return (
     <SafeAreaView className="bg-primary h-full">
@@ -20,7 +30,7 @@ export default function App() {
           />
           <View className="mt-5">
             <Text className="text-3xl text-white font-bold text-center">
-              Discover The Endless Posibilities With{' '}
+              Discover The Endless Possibilities With{' '}
               <Text className="text-secondary-200">LupEase</Text>
             </Text>
             <Image
@@ -34,7 +44,7 @@ export default function App() {
           </Text>
           <CustomButton
             title="Continue With Email"
-            handlePress={() => router.push('/sign-in')}
+            handlePress={handlePress}
             containerStyles="w-full mt-7"
           />
         </View>

@@ -6,7 +6,7 @@ import { images } from '../../constants';
 import FormField from '../../components/FormField';
 import { Link, useRouter } from 'expo-router';
 import { getAuth,signInWithEmailAndPassword } from 'firebase/auth';
-
+import { auth } from '../../config/firebase';
 
 const SignIn = () => {
   const [form, setForm] = useState({
@@ -15,7 +15,7 @@ const SignIn = () => {
 
   });
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const auth = getAuth();
+  
 
   const router = useRouter();
 
