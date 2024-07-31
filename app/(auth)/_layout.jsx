@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Stack, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { auth } from '../../config/firebase'; // Adjust the import path as necessary
+import { auth } from '../../config/firebase'; 
 
 const AuthLayout = () => {
   const [initializing, setInitializing] = useState(true);

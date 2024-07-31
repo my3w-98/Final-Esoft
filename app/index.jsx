@@ -5,7 +5,7 @@ import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { images } from '../constants';
 import CustomButton from '../components/CustomButton';
-import { auth } from '../config/firebase'; // Correctly import auth
+import { auth } from '../config/firebase'; 
 
 export default function App() {
   const router = useRouter();

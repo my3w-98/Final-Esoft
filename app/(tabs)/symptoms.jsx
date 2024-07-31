@@ -1,4 +1,4 @@
-// Symptoms.js
+
 import React, { useState } from 'react';
 import { View, Text, ScrollView, TouchableWithoutFeedback, Keyboard, Button,FlatList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -6,7 +6,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import SymptomsEntry from '../services/symptomsEntry';
 import BloodTestEntry from '../services/bloodTestEntry';
 import CustomButton from '../../components/CustomButton';
-import { getFirestore } from 'firebase/firestore'; // Adjust the import according to your file structure
+import { getFirestore } from 'firebase/firestore';
 import { collection, addDoc } from 'firebase/firestore';
 
 const Symptoms = () => {

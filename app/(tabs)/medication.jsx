@@ -3,8 +3,8 @@ import { View, Text, TextInput, ScrollView, TouchableOpacity, Platform, Alert, F
 import { SafeAreaView } from 'react-native-safe-area-context';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import CustomButton from '../../components/CustomButton';
-import { getFirestore } from 'firebase/firestore'; // Correctly import the Firebase configuration file
-import { collection, addDoc, Timestamp, getDocs, deleteDoc, doc } from 'firebase/firestore'; // Import Firestore functions
+import { getFirestore } from 'firebase/firestore'; 
+import { collection, addDoc, Timestamp, getDocs, deleteDoc, doc } from 'firebase/firestore'; 
 
 const Medication = () => {
   const [medication, setMedication] = useState('');

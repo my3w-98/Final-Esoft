@@ -1,4 +1,4 @@
-// SignUp.js
+
 import { View, Text, ScrollView, Image } from 'react-native';
 import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';

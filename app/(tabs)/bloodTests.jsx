@@ -3,9 +3,9 @@ import { View, Text, TouchableWithoutFeedback, Keyboard, FlatList } from 'react-
 import { SafeAreaView } from 'react-native-safe-area-context';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import BloodTestEntry from '../services/bloodTestEntry';
-import { Button } from 'react-native-elements'; // Importing Button from react-native-elements
+import { Button } from 'react-native-elements'; 
 import { getFirestore } from 'firebase/firestore';
- // Adjust the import according to your file structure
+ 
 import { collection, addDoc } from 'firebase/firestore';
 
 const BloodTests = ({ navigation }) => {
@@ -90,7 +90,7 @@ const db = getFirestore();
   );
 
   return (
-    <SafeAreaView className="bg-primary flex-1">
+    <SafeAreaView className="bg-primarytabs flex-1">
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <FlatList
           data={[]}

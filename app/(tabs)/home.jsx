@@ -1,9 +1,9 @@
 import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { getAuth } from 'firebase/auth'; // Adjust the path as necessary
+import { getAuth } from 'firebase/auth'; 
 import { useNavigation } from '@react-navigation/native';
-import { Icon } from 'react-native-elements'; // Assuming you're using react-native-elements
+import { Icon } from 'react-native-elements'; 
 import { auth } from '../../config/firebase';
 
 
