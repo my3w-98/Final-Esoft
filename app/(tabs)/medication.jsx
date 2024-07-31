@@ -3,10 +3,12 @@ import { View, Text, TextInput, ScrollView, TouchableOpacity, Platform, Alert, F
 import { SafeAreaView } from 'react-native-safe-area-context';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import CustomButton from '../../components/CustomButton';
-import { getFirestore } from 'firebase/firestore'; 
-import { collection, addDoc, Timestamp, getDocs, deleteDoc, doc } from 'firebase/firestore'; 
+import { getFirestore } from 'firebase/firestore';
+import { collection, addDoc, Timestamp, getDocs, deleteDoc, doc } from 'firebase/firestore';
 
+// Medication component
 const Medication = () => {
+  // State hooks
   const [medication, setMedication] = useState('');
   const [dose, setDose] = useState('');
   const [reminder, setReminder] = useState(new Date());
@@ -15,6 +17,7 @@ const Medication = () => {
   const [medications, setMedications] = useState([]);
   const db = getFirestore();
 
+  // Fetch medications 
   useEffect(() => {
     const fetchMedications = async () => {
       const querySnapshot = await getDocs(collection(db, 'medications'));
@@ -25,6 +28,7 @@ const Medication = () => {
     fetchMedications();
   }, []);
 
+  // Handle saving new medication
   const handleSave = async () => {
     if (!medication.trim() || !dose.trim()) {
       Alert.alert('Error', 'Medication name and dose cannot be empty');
@@ -32,7 +36,6 @@ const Medication = () => {
     }
 
     const duplicate = medications.find(med => med.medication.toLowerCase() === medication.toLowerCase());
-
     if (duplicate) {
       Alert.alert('Error', 'This medication already exists');
       return;
@@ -46,7 +49,6 @@ const Medication = () => {
       });
       setMedications([...medications, { medication, dose, reminder, id: newDoc.id }]);
       Alert.alert('Success', 'Medication saved successfully');
-      // Clear the inputs
       setMedication('');
       setDose('');
       setReminder(new Date());
@@ -55,15 +57,13 @@ const Medication = () => {
     }
   };
 
+  // Handle deleting a medication
   const handleDelete = async (id) => {
     Alert.alert(
       'Confirm Delete',
       'Are you sure you want to delete this medication?',
       [
-        {
-          text: 'Cancel',
-          style: 'cancel',
-        },
+        { text: 'Cancel', style: 'cancel' },
         {
           text: 'Delete',
           onPress: async () => {
@@ -82,26 +82,31 @@ const Medication = () => {
     );
   };
 
+  // Handle date change
   const onChangeDate = (event, selectedDate) => {
     const currentDate = selectedDate || reminder;
     setShowDatePicker(Platform.OS === 'ios');
     setReminder(currentDate);
   };
 
+  // Handle time change
   const onChangeTime = (event, selectedTime) => {
     const currentTime = selectedTime || reminder;
     setShowTimePicker(Platform.OS === 'ios');
     setReminder(currentTime);
   };
 
+  // Show date picker
   const showDatepicker = () => {
     setShowDatePicker(true);
   };
 
+  // Show time picker
   const showTimepicker = () => {
     setShowTimePicker(true);
   };
 
+  // Render each medication item
   const renderMedication = ({ item }) => (
     <View className="bg-customColors-color1 rounded-lg p-4 mb-4 flex-row justify-between items-center">
       <View>
@@ -114,6 +119,7 @@ const Medication = () => {
     </View>
   );
 
+  // Render the component UI
   return (
     <SafeAreaView className="bg-primarytabs flex-1">
       <FlatList

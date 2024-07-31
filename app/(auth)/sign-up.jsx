@@ -10,30 +10,35 @@ import { getAuth } from 'firebase/auth';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../config/firebase';
 
+// Define the SignUp component
 const SignUp = () => {
+  // Initialize state for form fields
   const [form, setForm] = useState({
     email: '',
     password: '',
   });
 
- 
+  // Initialize state for handling form submission status
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const router = useRouter();
+  const router = useRouter(); // Get router for navigation
 
+  // Define the submit function to handle form submission
   const submit = async () => {
     console.log('Submit button clicked');
-    setIsSubmitting(true);
+    setIsSubmitting(true); // Set submitting state to true
     try {
+      // Create user with email and password using Firebase authentication
       const userCredential = await createUserWithEmailAndPassword(auth, form.email, form.password);
       console.log('User signed up successfully:', userCredential.user);
       router.push('/sign-in'); // Redirect to the sign-in page
     } catch (error) {
       console.error('Error signing up:', error);
     } finally {
-      setIsSubmitting(false);
+      setIsSubmitting(false); // Reset submitting state
     }
   };
 
+  // Render the SignUp component UI
   return (
     <SafeAreaView className="bg-primary h-full">
       <ScrollView>
@@ -70,4 +75,5 @@ const SignUp = () => {
   );
 };
 
+// Export the SignUp component as the default export
 export default SignUp;

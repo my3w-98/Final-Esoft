@@ -26,11 +26,13 @@ const Home = () => {
   return (
     <SafeAreaView className="bg-primary h-full">
       <View className="flex-row justify-end p-4">
+        {/*render logout button*/}
         <TouchableOpacity onPress={handleLogout} className="flex-row items-center">
           <Icon name="logout" size={24} color="#fff" />
           <Text className="text-white ml-2">Logout</Text>
         </TouchableOpacity>
       </View>
+      {/*render demo analysis text*/}
       <ScrollView>
         <View className="w-full justify-center min-h-[85vh] px-3 my-6">
           <Text className="text-2xl text-white font-psemibold mt-10">Analytics</Text>

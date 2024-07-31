@@ -4,31 +4,38 @@ import Slider from '@react-native-community/slider';
 import CustomButton from '../../components/CustomButton';
 
 const SymptomsEntry = ({ symptoms, setSymptoms }) => {
+  // State to manage the current symptom input
   const [symptom, setSymptom] = useState('');
+  // State to manage the severity level of the symptom
   const [severity, setSeverity] = useState(1);
+  // State to manage the index of the symptom being edited
   const [editIndex, setEditIndex] = useState(null);
 
+  // Function to add or update a symptom
   const handleAddSymptom = () => {
-    if (symptom.trim()) {
-      if (editIndex !== null) {
+    if (symptom.trim()) { // Ensure the symptom input is not empty
+      if (editIndex !== null) { // If in edit mode, update the symptom
         const updatedSymptoms = [...symptoms];
         updatedSymptoms[editIndex] = { symptom: symptom.trim(), severity };
         setSymptoms(updatedSymptoms);
-        setEditIndex(null);
-      } else {
+        setEditIndex(null); // Reset edit mode
+      } else { // If not in edit mode, add a new symptom
         setSymptoms([...symptoms, { symptom: symptom.trim(), severity }]);
       }
+      // Reset symptom input and severity level
       setSymptom('');
       setSeverity(1);
     }
   };
 
+  // Function to populate the input fields for editing a symptom
   const handleEditSymptom = (index) => {
     setSymptom(symptoms[index].symptom);
     setSeverity(symptoms[index].severity);
     setEditIndex(index);
   };
 
+  // Function to delete a symptom from the list
   const handleDeleteSymptom = (index) => {
     const updatedSymptoms = symptoms.filter((_, i) => i !== index);
     setSymptoms(updatedSymptoms);

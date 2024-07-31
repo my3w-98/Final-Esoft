@@ -1,6 +1,5 @@
-
 import React, { useState } from 'react';
-import { View, Text, ScrollView, TouchableWithoutFeedback, Keyboard, Button,FlatList } from 'react-native';
+import { View, Text, ScrollView, TouchableWithoutFeedback, Keyboard, Button, FlatList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import SymptomsEntry from '../services/symptomsEntry';
@@ -9,7 +8,9 @@ import CustomButton from '../../components/CustomButton';
 import { getFirestore } from 'firebase/firestore';
 import { collection, addDoc } from 'firebase/firestore';
 
+// Symptoms component
 const Symptoms = () => {
+  // State hooks
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [symptoms, setSymptoms] = useState([]);
@@ -18,6 +19,7 @@ const Symptoms = () => {
   const [markers, setMarkers] = useState([]);
   const db = getFirestore();
 
+  // Handle saving data to Firestore
   const handleSave = async () => {
     try {
       const data = {
@@ -38,7 +40,7 @@ const Symptoms = () => {
     }
   };
 
-
+  // Render header component
   const renderHeader = () => (
     <>
       <View className="bg-customColors-color1 rounded-lg p-6 mb-6">
@@ -69,6 +71,7 @@ const Symptoms = () => {
     </>
   );
 
+  // Render footer component
   const renderFooter = () => (
     <View className="bg-customColors-color1 rounded-lg p-6">
       <CustomButton
@@ -79,6 +82,7 @@ const Symptoms = () => {
     </View>
   );
 
+  // Render the component UI
   return (
     <SafeAreaView className="bg-primarytabs flex-1">
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -92,6 +96,5 @@ const Symptoms = () => {
     </SafeAreaView>
   );
 };
-
 
 export default Symptoms;

@@ -1,62 +1,84 @@
+// Import necessary components and libraries
 import React, { useState } from 'react';
-import { View, Text, TextInput, FlatList, Button } from 'react-native';
+import { View, Text, TextInput, FlatList, TouchableOpacity, Switch, Alert } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import CustomButton from '../../components/CustomButton';
+import { getFirestore, collection, addDoc } from 'firebase/firestore';
 
+// Default blood tests with their markers
 const defaultBloodTests = {
   ESR: ['ESR Value'],
   CRP: ['CRP Value'],
   'FBC/CBC': ['HB', 'WBC', 'Plt', 'Neutrophils', 'Lymphocytes', 'RBC', 'HCT', 'MCV', 'MCH'],
   ALT: ['ALT Value'],
-  
-  
 };
 
+// BloodTestEntry component
 const BloodTestEntry = ({ bloodTestDone, setBloodTestDone, testName, setTestName, markers, setMarkers }) => {
-  const [markerName, setMarkerName] = useState('');
-  const [markerValue, setMarkerValue] = useState('');
   const [tempMarkers, setTempMarkers] = useState({});
+  const db = getFirestore();
 
-  const handleAddMarker = () => {
-    if (markerName.trim() && markerValue.trim()) {
-      setMarkers([...markers, { name: markerName.trim(), value: markerValue.trim() }]);
-      setMarkerName('');
-      setMarkerValue('');
-    }
-  };
-
+  // Handle value change for default markers
   const handleDefaultMarkerValueChange = (marker, value) => {
     setTempMarkers({ ...tempMarkers, [marker]: value });
   };
 
-  const saveDefaultMarkers = () => {
+  // Save markers to state and Firestore
+  const saveMarkers = async () => {
     const newMarkers = Object.entries(tempMarkers).map(([name, value]) => ({ name, value }));
     setMarkers([...markers, ...newMarkers]);
     setTempMarkers({});
+
+    try {
+      await addDoc(collection(db, 'bloodTests'), {
+        testName,
+        markers: [...markers, ...newMarkers],
+      });
+      Alert.alert('Success', 'Blood test results saved successfully');
+    } catch (error) {
+      Alert.alert('Error', 'Failed to save blood test results');
+    }
+  };
+
+  // Handle delete marker
+  const deleteMarker = (index) => {
+    const newMarkers = markers.filter((_, i) => i !== index);
+    setMarkers(newMarkers);
   };
 
   return (
-    <View style={{ marginTop: 16 }}>
-      <Text style={{ fontSize: 18, color: '#FFFFFF', fontFamily: 'pregular' }}>Blood Test Done?</Text>
-      <Button title={bloodTestDone ? "No" : "Yes"} onPress={() => setBloodTestDone(!bloodTestDone)} />
+    <View className="mt-4">
+      {/* Toggle switch to indicate if a blood test was done */}
+      <Text className="text-lg text-white">Blood Test Done?</Text>
+      <Switch
+        value={bloodTestDone}
+        onValueChange={() => setBloodTestDone(!bloodTestDone)}
+        trackColor={{ false: '#767577', true: '#81b0ff' }}
+        thumbColor={bloodTestDone ? '#f5dd4b' : '#f4f3f4'}
+        ios_backgroundColor="#3e3e3e"
+      />
+
       {bloodTestDone && (
-        <View style={{ marginTop: 16 }}>
-          <Text style={{ fontSize: 18, color: '#FFFFFF', fontFamily: 'pregular' }}>Test Name</Text>
+        <View className="mt-4">
+          {/* Picker for selecting the test name */}
+          <Text className="text-lg text-white">Test Name</Text>
           <Picker
             selectedValue={testName}
             onValueChange={(itemValue) => setTestName(itemValue)}
-            style={{ color: '#FFFFFF', backgroundColor: '#000000', borderRadius: 8, marginTop: 8 }}
+            className="text-white bg-black rounded-lg mt-2"
           >
             {Object.keys(defaultBloodTests).map((test, index) => (
               <Picker.Item key={index} label={test} value={test} />
             ))}
           </Picker>
-          <Text style={{ fontSize: 18, color: '#FFFFFF', fontFamily: 'pregular', marginTop: 16 }}>Markers</Text>
+
+          {/* Inputs for entering marker values */}
+          <Text className="text-lg text-white mt-4">Markers</Text>
           {defaultBloodTests[testName] && defaultBloodTests[testName].map((defaultMarker, index) => (
-            <View key={index} style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-              <Text style={{ fontSize: 18, color: '#FFFFFF', fontFamily: 'pregular' }}>{defaultMarker}</Text>
+            <View key={index} className="flex-row justify-between items-center mt-2">
+              <Text className="text-lg text-white">{defaultMarker}</Text>
               <TextInput
-                style={{ borderColor: '#FFFFFF', borderWidth: 1, borderRadius: 8, padding: 8, marginTop: 8, marginBottom:8, color: '#FFFFFF', backgroundColor: '#000000', width: '50%' }}
+                className="border border-white rounded-lg p-2 mt-2 mb-2 text-white bg-black w-1/2"
                 placeholder="Value"
                 placeholderTextColor="#CDCDE0"
                 onChangeText={(value) => handleDefaultMarkerValueChange(defaultMarker, value)}
@@ -64,39 +86,25 @@ const BloodTestEntry = ({ bloodTestDone, setBloodTestDone, testName, setTestName
               />
             </View>
           ))}
-          <View style={{ marginTop: 30}} ><Button  title="Save Markers" onPress={saveDefaultMarkers} /></View>
-          {testName === 'Other' && (
-            <View>
-              <TextInput
-                style={{ borderColor: '#FFFFFF', borderWidth: 1, borderRadius: 8, padding: 8, marginTop: 8, color: '#FFFFFF', backgroundColor: '#000000' }}
-                placeholder="Enter marker"
-                placeholderTextColor="#CDCDE0"
-                value={markerName}
-                onChangeText={setMarkerName}
-                returnKeyType="done"
-              />
-              <TextInput
-                style={{ borderColor: '#FFFFFF', borderWidth: 1, borderRadius: 8, padding: 8, marginTop: 8,marginBottom: 8, color: '#FFFFFF', backgroundColor: '#000000' }}
-                placeholder="Enter marker value"
-                placeholderTextColor="#CDCDE0"
-                value={markerValue}
-                onChangeText={setMarkerValue}
-                returnKeyType="done"
-              />
-              <CustomButton
-                title="Add Marker"
-                handlePress={handleAddMarker}
-                containerStyles={{ marginTop: 16 }}
-              />
-            </View>
-          )}
+
+          {/* Save button to save the marker values */}
+          <View className="mt-8">
+            <CustomButton title="Save Markers" handlePress={saveMarkers} />
+          </View>
+
+          {/* Display the list of saved markers with delete option */}
           {markers.length > 0 && (
             <FlatList
               data={markers}
               keyExtractor={(item, index) => index.toString()}
-              renderItem={({ item }) => (
-                <View style={{ padding: 16, borderBottomColor: '#FFFFFF', borderBottomWidth: 1, marginTop: 16 }}>
-                  <Text style={{ fontSize: 18, color: '#FFFFFF', fontFamily: 'pregular' }}>{item.name}: {item.value}</Text>
+              renderItem={({ item, index }) => (
+                <View className="p-4 border-b border-white mt-4">
+                  <Text className="text-lg text-white">{item.name}: {item.value}</Text>
+                  <View className="flex-row justify-between items-center mt-2">
+                    <TouchableOpacity onPress={() => deleteMarker(index)}>
+                      <Text className="text-red-500">Delete</Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
               )}
             />

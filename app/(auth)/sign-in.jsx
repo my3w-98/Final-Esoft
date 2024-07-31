@@ -1,39 +1,43 @@
 import { View, Text, ScrollView, Image } from 'react-native';
 import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import CustomButton from '../../components/CustomButton';
-import { images } from '../../constants';
-import FormField from '../../components/FormField';
-import { Link, useRouter } from 'expo-router';
-import { getAuth,signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../../config/firebase';
+import CustomButton from '../../components/CustomButton'; 
+import { images } from '../../constants'; 
+import FormField from '../../components/FormField'; 
+import { Link, useRouter } from 'expo-router'; 
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'; 
+import { auth } from '../../config/firebase'; 
 
+// SignIn component
 const SignIn = () => {
+  // useState hook to manage form state
   const [form, setForm] = useState({
-    email:'',
-    password:''
-
+    email: '',
+    password: ''
   });
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  
+  // useState hook to manage the submission state
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Router hook for navigation
   const router = useRouter();
 
- const submit  = async () =>{
-  console.log('Submit clicked');
-  setIsSubmitting(true);
-  try {
-   
-    const userCredential = await signInWithEmailAndPassword(auth, form.email, form.password);
-    console.log('User signed in successfully:', userCredential.user);
-    router.push('/home'); // Redirect to the home page
-  }  catch (error) {
-    console.error('Error signing in:', error);
-  } finally {
-    setIsSubmitting(false);
-  }
- };
+  // Function to handle form submission
+  const submit = async () => {
+    console.log('Submit clicked');
+    setIsSubmitting(true); // Set submitting state to true
+    try {
+      // Sign in with email and password using Firebase authentication
+      const userCredential = await signInWithEmailAndPassword(auth, form.email, form.password);
+      console.log('User signed in successfully:', userCredential.user);
+      router.push('/home'); // Redirect to the home page
+    } catch (error) {
+      console.error('Error signing in:', error); // Log any errors
+    } finally {
+      setIsSubmitting(false); // Reset submitting state
+    }
+  };
 
+  // Render the component UI
   return (
     <SafeAreaView className="bg-primary h-full">
       <ScrollView>
@@ -54,7 +58,7 @@ const SignIn = () => {
             otherStyles="mt-7"
             secureTextEntry
           />
-          <CustomButton
+                 <CustomButton
             title="Sign In"
             handlePress={submit}
             containerStyles="mt-7"
